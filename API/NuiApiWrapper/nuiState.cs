@@ -152,101 +152,178 @@ namespace NuiApiWrapper
         }
 
         //! create new connection
-        public ConnectionDescriptor CreateConnection(string pipelineName,
-            int sourceModuleIndex, int sourceModulePort,
-            int destModuleIndex, int destModulePort)
+        public bool CreateConnection(string pipelineName,
+            int srcModuleIdx, int srcModulePort,
+            int dstModuleIdx, int dstModulePort)
         {
-            throw new NotImplementedException();
+            bool status = (bool)NuiState.Instance.client.InvokeVargs(
+                typeof(PipelineDescriptor),
+                "web_create_module",
+                pipelineName, srcModuleIdx, srcModulePort, dstModuleIdx, dstModulePort);
+
+            return status;
         }
 
         /************************************************************************/
         /* UPDATE                                                               */
         /************************************************************************/
-        public PipelineDescriptor UpdatePipeline(string name)
+        public PipelineDescriptor UpdatePipeline(string pipelineName, string newName = null, string newDescription = null, string author = null)
         {
-            throw new NotImplementedException();
+            PipelineDescriptor pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
+                typeof(PipelineDescriptor),
+                "web_update_pipeline",
+                pipelineName, newName, newDescription, author);
+
+            return pipeline;
         }
 
-        public PipelineDescriptor UpdatePipelineProperty(string name,
-            string key, string value, string description)
+        public PipelineDescriptor UpdatePipelineProperty(string pipelineName,
+            string key, object value, string description)
         {
-            throw new NotImplementedException();
+            PipelineDescriptor pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
+                typeof(PipelineDescriptor),
+                "web_update_pipelineProperty",
+                pipelineName, key, value, description);
+
+            return pipeline;
         }
 
-        public ModuleDescriptor UpdateModule(string moduleName)
+        public PipelineDescriptor UpdateModuleProperty(string pipelineName,
+            int moduleIdx, string key, object value)
         {
-            throw new NotImplementedException();
+            PipelineDescriptor pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
+                typeof(PipelineDescriptor),
+                "web_update_moduleProperty",
+                pipelineName, moduleIdx, key, value);
+
+            return pipeline;
         }
 
-        public PipelineDescriptor UpdateModuleProperty(string name,
-        string key, string value, string description)
+        public EndpointDescriptor UpdateEndpoint(string type, int endpointIdx, string descriptor, int newIndex = -1)
         {
-            throw new NotImplementedException();
+            EndpointDescriptor endpoint;
+            if (newIndex < 0)
+            {
+                endpoint = (EndpointDescriptor)NuiState.Instance.client.InvokeVargs(
+                    typeof(EndpointDescriptor),
+                    "web_update_endpoint",
+                    type, endpointIdx, descriptor, null);
+            }
+            else 
+            {
+                endpoint = (EndpointDescriptor)NuiState.Instance.client.InvokeVargs(
+                    typeof(EndpointDescriptor),
+                    "web_update_endpoint",
+                    type, endpointIdx, descriptor, newIndex);
+            }
+
+            return endpoint;
         }
 
         public ConnectionDescriptor UpdateConnection(string pipelineName,
-            int sourceModuleIndex, int sourceModulePort,
-            int destModuleIndex, int destModulePort)
+            int srcModuleIdx, int srcModulePort,
+            int dstModuleIdx, int dstModulePort, params KeyValuePair<string,object>[] keyValues)
         {
-            throw new NotImplementedException();
+            var connection = (ConnectionDescriptor)NuiState.Instance.client.InvokeVargs(
+                typeof(ConnectionDescriptor),
+                "web_update_endpoint",
+                pipelineName, srcModuleIdx, srcModulePort,
+                dstModuleIdx, dstModulePort, keyValues);
+
+            return connection;
         }
 
-        public EndpointDescriptor UpdateEndpoint()
+        public int UpdateEndpointCount(string pipelineName, string type, int newCount)
         {
-            throw new NotImplementedException();
-        }
+            var count = (int)NuiState.Instance.client.InvokeVargs(
+                typeof(int),
+                "web_update_endpointCount",
+                pipelineName, type, newCount);
 
-        public int UpdateEndpointCount()
-        {
-            throw new NotImplementedException();
+            return count;
         }
 
         /************************************************************************/
         /* DELETE                                                               */
         /************************************************************************/
 
-        public void DeletePipeline(string pipelineName)
+        public bool DeletePipeline(string pipelineName)
         {
-            throw new NotImplementedException();
+            var status = (bool)NuiState.Instance.client.InvokeVargs(
+                typeof(bool),
+                "web_delete_pipeline",
+                pipelineName);
+
+            return status;
         }
 
-        public void DeleteModule(string pipelineName, int moduleIndex)
+        public PipelineDescriptor DeleteModule(string pipelineName, int moduleIndex)
         {
-            throw new NotImplementedException();
+            var pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
+                 typeof(PipelineDescriptor),
+                 "web_delete_module",
+                 pipelineName, moduleIndex);
+
+            return pipeline;
         }
 
-        public void DeleteConnection(string pipelineName,
+        public PipelineDescriptor DeleteConnection(string pipelineName,
             int srcModuleIdx, int srcModulePort,
             int dstModuleIdx, int dstModulePort)
         {
-            throw new NotImplementedException();
+            var pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
+                typeof(PipelineDescriptor),
+                "web_delete_connection",
+                pipelineName, srcModuleIdx, srcModulePort, dstModuleIdx, dstModulePort);
+
+            return pipeline;
         }
 
         /************************************************************************/
         /* GET                                                                  */
         /************************************************************************/
 
-        public void GetPipeline()
+        public PipelineDescriptor GetPipeline(string pipelineName)
         {
-            throw new NotImplementedException();
+            var pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
+                typeof(PipelineDescriptor),
+                "web_get_pipeline",
+                pipelineName);
+
+            return pipeline;
         }
 
-        public void GetModule()
+        public ModuleDescriptor GetModule(string pipelineName, int moduleIdx)
         {
-            throw new NotImplementedException();
+            var module = (ModuleDescriptor)NuiState.Instance.client.InvokeVargs(
+                typeof(ModuleDescriptor),
+                "web_get_module",
+                pipelineName, moduleIdx);
+
+            return module;
         }
 
-        public void GetConnection()
+        public ConnectionDescriptor GetConnection(string pipelineName, int connectionIdx)
         {
-            throw new NotImplementedException();
+            var connection = (ConnectionDescriptor)NuiState.Instance.client.InvokeVargs(
+                typeof(ConnectionDescriptor),
+                "web_get_connection",
+                pipelineName, connectionIdx);
+
+            return connection;
         }
 
         /************************************************************************/
         /* SAVE                                                                 */
         /************************************************************************/
-        public void Save(string pipelineName)
+        public bool Save(string pipelineName, string fileName)
         {
-            throw new NotImplementedException();
+            var response = (bool)NuiState.Instance.client.InvokeVargs(
+                typeof(bool),
+                "web_save_pipeline",
+                pipelineName, fileName);
+
+            return response;
         }
     }
 }
