@@ -49,11 +49,15 @@
     <Compile Include="SampleData.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\project\jayrock-0.9.12915-all\src\Jayrock.Json\Jayrock.Json.csproj">
+    <ProjectReference Include="..\..\Jayrock\Jayrock.Json\Jayrock.Json.csproj">
       <Project>{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}</Project>
       <Name>Jayrock.Json</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\project\jayrock-0.9.12915-all\src\Jayrock\Jayrock.csproj">
+    <ProjectReference Include="..\..\Jayrock\Jayrock.Sandbox\Jayrock.Sandbox.csproj">
+      <Project>{405B6AFF-52D4-4326-84F8-814FBF89AA12}</Project>
+      <Name>Jayrock.Sandbox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Jayrock\Jayrock\Jayrock.csproj">
       <Project>{A178A4BB-CE12-4BF3-8B17-6DF0D82120C8}</Project>
       <Name>Jayrock</Name>
     </ProjectReference>

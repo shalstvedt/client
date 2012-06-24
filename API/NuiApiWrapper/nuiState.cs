@@ -143,12 +143,12 @@ namespace NuiApiWrapper
         //! creates new module descriptor in pipeline
         public ModuleDescriptor CreateModule(string pipelineName, string moduleName)
         {
-            PipelineDescriptor pipeline = (PipelineDescriptor)NuiState.Instance.client.InvokeVargs(
+            ModuleDescriptor module = (ModuleDescriptor)NuiState.Instance.client.InvokeVargs(
                 typeof(PipelineDescriptor),
-                "web_create_pipeline",
+                "web_create_module",
                 pipelineName, moduleName);
 
-            return pipeline;
+            return module;
         }
 
         //! create new connection
