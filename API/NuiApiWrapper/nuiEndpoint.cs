@@ -7,7 +7,7 @@ namespace NuiApiWrapper
 {
     public class EndpointDescriptor
     {
-        int index;
-        string descriptor;
+        public int index;
+        public string descriptor;
     }
 }
