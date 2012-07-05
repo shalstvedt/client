@@ -10,9 +10,9 @@ namespace NuiApiWrapper
         public string name;
         public string description;
         public string author;
-        public List<ModuleDescriptor> modules;
-        public List<EndpointDescriptor> inputEndpoints;
-        public List<EndpointDescriptor> outputEndpoints;
-        public List<ConnectionDescriptor> connections;
+        public ModuleDescriptor[] modules;
+        public EndpointDescriptor[] inputEndpoints;
+        public EndpointDescriptor[] outputEndpoints;
+        public ConnectionDescriptor[] connections;
     }
 }

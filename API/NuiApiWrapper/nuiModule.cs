@@ -32,7 +32,7 @@ namespace NuiApiWrapper
         public string name;
         public string description;
         public string author;
-        List<EndpointDescriptor> inputEndpoints;
-        List<EndpointDescriptor> outputEndpoints;
+        public EndpointDescriptor[] inputEndpoints;
+        public EndpointDescriptor[] outputEndpoints;
     }
 }
