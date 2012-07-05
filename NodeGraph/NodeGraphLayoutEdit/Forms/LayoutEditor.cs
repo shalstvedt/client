@@ -30,6 +30,7 @@ using System.Text;
 using System.Windows.Forms;
 using NodeGraphControl;
 using Utilities;
+using NuiApiWrapper;
 
 namespace NodeGraphLayoutEdit
 {
@@ -55,7 +56,7 @@ namespace NodeGraphLayoutEdit
                 this.nodeGraphPanel.ShowGrid = Convert.ToBoolean(iniFile.Section("View").Get("ShowGrid"));
                 this.nodeGraphPanel.GridPadding = Convert.ToInt16(iniFile.Section("View").Get("GridPadding"));
 
-                this.nodeGraphPanel.LoadPipeline("root");
+                this.nodeGraphPanel.LoadPipeline(NuiState.Instance.GetPipeline("root"));
                 //Convert.ToBoolean(value));
             }
             catch (FormatException)

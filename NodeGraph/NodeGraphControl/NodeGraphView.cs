@@ -147,6 +147,7 @@ namespace NodeGraphControl
                 //! TODO : normal algorythm for module placement
                 this.m_NodeCollection[i].X = i * 100;
                 this.m_NodeCollection[i].Y = i * 100;
+                this.m_NodeCollection[i].UpdateHitRectangle();
             }
 
             this.m_SelectedItems = new List<NodeGraphNode>();

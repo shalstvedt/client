@@ -651,15 +651,15 @@ namespace NodeGraphControl
             if (this.m_bSmoothBehavior)
             {
                 // Smooth Zooming
-                this.View.CurrentViewZoom += (this.View.ViewZoom - this.View.CurrentViewZoom) * 0.06f;
+                this.View.CurrentViewZoom += (this.View.ViewZoom - this.View.CurrentViewZoom) * 0.08f;
                 
                 // Smooth pan
                 // TODO : complete so it could be really smooth
                 //int sgn = Math.Sign(this.View.ViewZoom - this.View.CurrentViewZoom);
-                this.View.ViewX += this.View.ZoomTranslate.X;
-                this.View.ViewY += this.View.ZoomTranslate.Y;
+                this.View.ViewX += (int)(this.View.ZoomTranslate.X * Math.Abs(this.View.ViewZoom - this.View.CurrentViewZoom) * 5);
+                this.View.ViewY += (int)(this.View.ZoomTranslate.Y * Math.Abs(this.View.ViewZoom - this.View.CurrentViewZoom) * 5);
 
-                if (Math.Abs(this.View.CurrentViewZoom - this.View.ViewZoom) < 0.005)
+                if (Math.Abs(this.View.CurrentViewZoom - this.View.ViewZoom) < 0.01)
                 {
                     this.View.ZoomTranslate = new Point(0, 0);
                     this.View.CurrentViewZoom = this.View.ViewZoom;
@@ -843,8 +843,7 @@ namespace NodeGraphControl
                 if (View.ZoomTranslate.X == 0 && View.ZoomTranslate.Y == 0)
                 {
                     int sgn = -1 * Math.Sign(e.Delta);
-                    ///! TODO : remove hardcode
-                    int zoomSteps = 120;
+                    int zoomSteps = 80;
                     
                     ///! TODO : consider using zoom value
                     View.ZoomTranslate = this.PointToClient(Control.MousePosition);
@@ -858,16 +857,14 @@ namespace NodeGraphControl
                 newViewZoom = this.View.ViewZoom + ((float)e.Delta * 0.001f);
                 if (newViewZoom > 0.04f && newViewZoom <= 4.0f)
                 {
+                    int hitIndex = HitModules(e.Location);
                     // PUSH
-                    if (newViewZoom > 3.3f && NuiUtils.IsPipeline(HitModules(e.Location))) 
+                    if (newViewZoom > 3.3f && hitIndex > 0 && NuiUtils.IsPipeline(this.View.NodeCollection[hitIndex].Name) ) 
                     {
                         layer++;
-
-                        //this.SaveCurrentView("graph_layer_" + (layer-1) + ".xml");
-                        //this.LoadCurrentView("graph_layer_" + (layer) + ".xml");
                         
                         //! Simply load new pipeline
-                        this.LoadPipeline(HitModules(e.Location));
+                        this.LoadPipeline( NuiState.Instance.NavigatePush(hitIndex) );
 
                         this.View.ViewZoom = 1;
                         return;
@@ -878,11 +875,8 @@ namespace NodeGraphControl
                     {
                         layer--;
 
-                        //this.SaveCurrentView("graph_layer_" + (layer+1) + ".xml");
-                        //this.LoadCurrentView("graph_layer_" + (layer) + ".xml");
-
                         //! Simply load previous pipeline
-
+                        this.LoadPipeline( NuiState.Instance.NavigatePop() );
                         this.View.ViewZoom = 1;
                         return;
                     }
@@ -1212,19 +1206,19 @@ namespace NodeGraphControl
         }
 
         /// <summary>
-        /// Returns name of module hit by mouse
+        /// Returns index of module hit by mouse
         /// </summary>
         /// <param name="p_CursorLocation"></param>
         /// <returns>name of hit module / pipeline </returns>
-        private string HitModules(Point p_CursorLocation)
+        private int HitModules(Point p_CursorLocation)
         {
             Rectangle HitTest = new Rectangle(this.ControlToView(p_CursorLocation), new Size());
 
-            foreach (NodeGraphNode i_Node in this.View.NodeCollection)
-                if (HitTest.IntersectsWith(i_Node.HitRectangle))
-                    return i_Node.Name;
+            for (int i = 0; i < this.View.NodeCollection.Count; i++)
+                if (HitTest.IntersectsWith(this.View.NodeCollection[i].HitRectangle))
+                    return i;
 
-            return null;
+            return -1;
         }
 
 
@@ -1425,9 +1419,10 @@ namespace NodeGraphControl
         }
 
 
-        public void LoadPipeline(string name)
+        public void LoadPipeline(PipelineDescriptor descriptor)
         {
-            this.View = new NodeGraphView(NuiState.Instance.GetPipeline(name), this);
+            this.View = new NodeGraphView(descriptor, this);
+            this.View.SelectedItems.Clear();
             this.UpdateFontSize();
             this.Refresh();
         }
